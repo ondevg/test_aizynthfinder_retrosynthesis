@@ -44,21 +44,27 @@ download_public_data .
 #### Случай 1 — AiZynthFinder нашёл путь
 Если  status = "solved"  и  n_routes > 0 , то SynthScore использует метрики AiZynthFinder:
 
-SynthScore = 1.0 \* max\_transforms + 3.0 \* (1 - best\_state\_score) + 0.5 \* log10(1 + number\_of\_nodes) + 0.5 \* (search\_time / 60)
-  где
-• max\_transforms : прокси числа стадий; больше стадий → сложнее.
-• best\_state\_score : прокси “качества” найденного решения; чем меньше, тем хуже/сложнее.
-• number\_of\_nodes  и  search\_time : отражают усилие поиска; большое дерево/долгий поиск часто соответствуют более сложным целям.
+`SynthScore = 1.0 * max_transforms + 3.0 * (1 - best_state_score) + 0.5 * log10(1 + number_of_nodes) + 0.5 * (search_time / 60)`
+
+где:
+
+- `max_transforms` — прокси числа стадий; больше стадий → сложнее.
+- `best_state_score` — прокси “качества” найденного решения; чем меньше, тем хуже/сложнее.
+- `number_of_nodes` и `search_time` — отражают усилие поиска; большое дерево/долгий поиск часто соответствуют более сложным целям.
+
 
 
 #### Случай 2 — путь не найден (no-route)
 Если  status != "solved"  или  n_routes == 0 , скоринг всё равно должен быть численным и различать такие молекулы.
 Используется RDKit SA_score (Ertl SA Score, примерно 1–10; 1 — легко, 10 — сложно):
 
-SynthScore = 15 + SA\_score
- где
-•	SA\_score  обеспечивает различие молекул внутри no-route (не один baseline),
-•	константа  15  отделяет no-route от большинства solved-случаев, сохраняя порядок по SA_score.
+`SynthScore = 15 + SA_score`
+
+где:
+
+- `SA_score` — обеспечивает различие молекул внутри no-route (не один baseline).
+- Константа `15` — отделяет no-route от большинства solved-случаев, сохраняя порядок по `SA_score`.
+
 
 
 
